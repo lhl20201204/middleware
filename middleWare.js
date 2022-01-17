@@ -5,7 +5,7 @@ class MiddleWare {
   { 
     this.info = {
         name:'lhl',
-        age:21
+        age:22
     }
     
   }
@@ -25,13 +25,12 @@ class MiddleWare {
    const proto = this.__proto__
    const attrs = (Object.getOwnPropertyNames(proto))
    const unProxyAttr = ['constructor','use']
-   for(let attr of attrs){
+   const  middleWares = [...arguments].map(v=>v(this)).reverse()
+  for(let attr of attrs){
        if(unProxyAttr.includes(attr)||(typeof proto[attr] !== 'function'))
        {
            continue
        }
-    
-  const  middleWares = [...arguments].map(v=>v(this)).reverse()
     Object.defineProperty(this, attr,{
          get(){           
            return  middleWares.reduce((m,v)=>v(m),proto[attr])
